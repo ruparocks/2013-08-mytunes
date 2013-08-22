@@ -1,19 +1,34 @@
 var SongQueue = Songs.extend({
 
   initialize: function(){
+    this.on('add', function(){
+      if (this.length === 1) {
+        this.playFirst();
+      }
+    });
+    this.on('ended', function(){
+      this.ended();
+    });
+    this.on('dequeue', function(song){
+      this.dequeue(song);
+    });
+  },
+
+  ended: function(){
+    this.shift();
+    if (this.length > 0){
+      this.playFirst();
+    }
   },
 
   enqueue: function(song){
-    this.unshift(song);
-  
+    this.push(song);
   },
 
-  dequeue: function(){
-    this.shift();
+  dequeue: function(song){
+    this.remove(song);
   },
   playFirst: function(){
     this.at(0).play();
   }
-
-  // maybe add event listener here
 });
